@@ -26,16 +26,17 @@ xtxi<-solve(t(x)%*%x)
 beta=xtxi%*%t(x)%*%y
 
 #d
-reg_mdl <- lm (total ~ expend+takers+verbal+math+ratio+salary, data=sat)
-x<-model.matrix(~ expend+takers+verbal+math, data=sat)
+reg_mdl <- lm (total ~ expend+takers+ratio+salary, data=sat)
+x<-model.matrix(~ expend+takers, data=sat)
 y<-sat$total
 #estimate
 xtxi<-solve(t(x)%*%x)
 # Find beta estimates
 beta=xtxi%*%t(x)%*%y
+beta
 
 #f
-mdl_takers<-lm(takers~expend+ratio+salary+verbal+math+total,data = sat)
+mdl_takers<-lm(takers~expend+ratio+salary+total,data = sat)
 summary(mdl_takers)
 
 
@@ -75,3 +76,54 @@ mdl_6<-lm(total~ math, data=sat)
 mdl_6
 mdl_7<-lm(total~ verbal, data=sat)
 mdl_7
+
+
+#j 1st
+par(mfrow=c(1,2))
+plot(fitted(mdl_6),residuals(mdl_6),xlab="Fitted",ylab="Residuals")
+abline(h=0)
+plot(fitted(mdl_6),sqrt(abs(residuals(mdl_6))),xlab="Fitted",ylab="Residuals")
+par(mfrow=c(1,1))
+
+
+#j 2nd
+shapiro.test(residuals(mdl_6))
+
+#j 3rd
+hatv<-hatvalues(mdl_6)
+sum(hatv)
+scores=rownames(sat)
+halfnorm(hatv,labs=scores,ylab="Laverages")
+abline(h=2*sum(hatv)/nrow(sat))
+
+#j 4th
+lmod<-lm(total~math, sat)
+plot(mdl_6)
+abline(lmod)
+
+#j 5th
+par(mfrow=c(1,3))
+#Add first point
+p1 <- c(300,600)
+lmod1 <- lm(total~math, rbind(sat, p1))
+plot(total ~ math, rbind(sat, p1))
+points(300,600,pch=4,cex=2)
+abline(lmod)
+abline(lmod1, lty=2)
+#Add second point
+p2 <- c(700,2000)
+lmod2 <- lm(total ~ math, rbind(sat, p2))
+plot(total ~ math, rbind(sat, p2))
+points(700,2000,pch=4,cex=2)
+abline(lmod)
+abline(lmod2,lty=2)
+#Add third point 
+p3 <- c(2000,700)
+lmod3 <- lm(total ~ math, rbind(sat, p3))
+plot(total ~ math, rbind(sat, p3))
+points(2000,700,pch=4,cex=2)
+abline(lmod)
+abline(lmod3,lty=2)
+par(mfrow=c(1,1))
+
+
