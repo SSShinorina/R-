@@ -13,8 +13,31 @@ dotplot(charges ~ region,  data = insurance,
 dotplot(charges ~ sex,  data = insurance,
         xlab = "sex", ylab = "charges")
 
-model = lm(charges ~ age + sex-1 + bmi + children + smoker-1 + region, data=insurance)
-summary(model)
- 
+
+# linear model on gender
+insurance$sex <- factor(insurance$sex)
+model = lm(charges ~ age+sex+bmi+children+smoker+region,data=insurance)
+model
+insurance$sex <- relevel(insurance$sex, ref=2)
+model = lm(charges ~ age+sex+bmi+children+smoker+region,data=insurance)
+model
+
+#   liner model on smokers 
+insurance$smoker <- factor(insurance$smoker)
+model = lm(charges ~ age+sex+bmi+children+smoker+region,data=insurance)
+model
+insurance$smoker <- relevel(insurance$smoker, ref=2)
+model = lm(charges ~ age+sex+bmi+children+smoker+region,data=insurance)
+model
+
+
+#   liner model on region 
+insurance$region <- factor(insurance$region)
+model = lm(charges ~ age+sex+bmi+children+smoker+region,data=insurance)
+model
+insurance$region <- relevel(insurance$region, ref = 3)
+model = lm(charges ~ age+sex+bmi+children+smoker+region,data=insurance)
+model
+
 
  
